@@ -6,13 +6,18 @@
     <title>Solemate</title>
     <!-- implement bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <!-- CSS wird noch implementiert 
-    <link rel="stylesheet" href="./res/css/xy"> <!-- Reihenfolge der CSS Datein ist wichtig --> 
-    <!-- -->
+    <!-- own css -->
+    <link rel="stylesheet" href="../res/css/style.css"> <!-- Reihenfolge der CSS Datein ist wichtig --> 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Include jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <?php
-        session_start();
+    //Session muss für jede html gesetzt werden 
+    if (!isset($_SESSION)) {
+    session_start();
+    }
     ?>
 
 

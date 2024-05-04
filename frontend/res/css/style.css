@@ -1,0 +1,155 @@
+
+
+.login-em {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.login-pw {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-top: 0px;
+}
+
+.c-item{
+  height: 480px;
+}
+
+.c-img{
+  height: 100%;
+  object-fit: cover;
+}
+
+.i-img{
+  height: 200px;
+}
+
+.imp-img{
+  height: 175px;
+  width: 150px;
+  margin-left: 5px;
+}
+
+.btn:hover, .btn:focus{
+  color: #f18035;
+  background-color: white !important;
+  border-color: #f18035;
+}
+
+.btn{
+  background-color: #f18035 !important; 
+  color: white;
+  border-radius: 30px;
+}
+
+.btn_admin{
+  background-color: #f18035 !important; 
+  color: white;
+  border-radius: 20px;
+}
+
+.btn_admin:hover, .btn_admin:focus{
+  color: #f18035;
+  background-color: white !important;
+  border-color: #f18035;
+}
+
+.navbar-toggler {
+  border:none;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.navbar{
+  background-color: #f18035;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: stretch;
+}
+
+.bla {
+  color: white;
+  padding: 10px 0;
+  margin: 0;
+  flex: 1;
+}
+
+.bla:hover {
+  color: #f18035;
+  background-color: white;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.formular{
+  max-width:480px; 
+  margin:auto;
+}
+
+.card {
+  max-width: auto;
+  margin: 30px 20px 20px 20px;
+}
+
+.card-btn {
+  margin-top: 35px; 
+  padding-top: 15px; 
+  text-align: right;
+}
+
+.foot{
+  background-color: black;
+  color: white;
+}
+
+.checkbox {
+  text-align: right;
+}
+
+.hallo{
+  color: white;
+}
+
+.reservation-item {
+  background-color: #ffc107;
+  border: 3px solid black;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.img-thumbnail {
+  max-width: 300px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.content {
+    flex: 1;
+}
+
+.foot {
+    flex-shrink: 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background-color: #333; /* Hintergrundfarbe des Footers */
+    color: white; /* Textfarbe des Footers */
+    padding: 20px; /* Innenabstand des Footers */
+}
+
+.foot a {
+    color: white; /* Farbe der Links im Footer */
+    text-decoration: none;
+    margin-right: 10px; /* Abstand zwischen den Links im Footer */
+}
