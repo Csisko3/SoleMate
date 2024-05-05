@@ -7,11 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const json = getFormJSON(e.target);
 
     // validierungen hier ? oder als extra function und dann abrufen
-
-    console.log(json);
+    // console.log(json); Bugfixing
+    registerUser(json);
   });
 
   function registerUser(json) {
+    //console.log("Test", json);
     $.ajax({
       type: "POST",
       url: "/SoleMate/backend/logic/RequestHandler.php?resource=user",
@@ -21,10 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
       contentType: 'application/json',
       success: function (response) {
           console.log("Successfully created user");
-          alert("Benutzer erfolgreich registriert.");
+          alert("Benutzer erfolgreich registriert");
       },
       error: function (xhr, status, error) {
-        console.log(json);
         console.log("Error:", error);
         console.log("Response Text:", xhr.responseText);
       },
