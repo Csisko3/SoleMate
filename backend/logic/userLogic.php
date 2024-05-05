@@ -1,12 +1,23 @@
 <?php
-include '../config/dbaccess.php';
-include '../models/user.php';
 
-
+require_once '../config/dbaccess.php';
+require_once '../models/user.php';
 
 class userLogic
 {
-    public function saveUser($data, $conn)
+    private $conn;
+
+    public function __construct()
+    {
+        global $host, $db_user, $db_password, $database;
+        $this->conn = new mysqli($host, $db_user, $db_password, $database);
+
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
+
+    public function saveUser($data)
     {
         $anrede = $data['anrede'] ?? '';
         $vorname = $data['firstname'] ?? '';
@@ -18,7 +29,7 @@ class userLogic
         $payment_info = $data['payment_info'] ?? '';
         $username = $data['username'] ?? '';
         $password = $data['password'] ?? '';
-        // $confirmPassword = $data['confirmPassword'] ?? ''; check ob passwörter übereinstimmen (wird nicht benötigt)
+        // $confirmPassword = $data['confirmPassword'] ?? ''; check ob passwörter übereinstimmen (optional)
 
         switch ($anrede) {
             case "Herr":
@@ -47,13 +58,13 @@ class userLogic
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // SQL-Abfrage zum Einfügen von Benutzerdaten
-        $sql = "INSERT INTO user (gender, firstname, lastname, adress, postcode, city, email, password, payment_info, is_admin) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (gender, firstname, lastname, adress, postcode, city, email, password, payment_info) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        if ($stmt = $conn->prepare($sql)) {
+        if ($stmt = $this->conn->prepare($sql)) {
             // Bind the parameters to the prepared statement
             $stmt->bind_param(
-                "isssissssi",
+                "isssissss",
                 $anrede,
                 $vorname,
                 $nachname,
@@ -66,15 +77,15 @@ class userLogic
             );
 
 
-            if ($conn->query($sql) === TRUE) {
+            if ($stmt->execute()) {
                 echo "Benutzer erfolgreich registriert";
-                $_SESSION['firstname'] = $vorname;
+/*                 $_SESSION['firstname'] = $vorname;
                 $_SESSION['lastname'] = $nachname;
                 $_SESSION['username'] = $username;
-                $_SESSION['email'] = $email;
+                $_SESSION['email'] = $email; */
                 //header("location: ../sites/index.php");
             } else {
-                echo "Fehler beim Einfügen des Benutzers: " . $conn->error;
+                echo "Fehler beim Einfügen des Benutzers: " .  $this->conn->close();
             }
         }
     }
