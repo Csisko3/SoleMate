@@ -1,5 +1,6 @@
 <?php
 include '../res/layout/header.php';
+include '../res/layout/navbar.php';
 ?>
 
 <body>
