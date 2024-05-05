@@ -1,5 +1,6 @@
 <?php
 include 'userLogic.php';
+include 'LoginLogic.php';
 
 class RequestHandler
 {
