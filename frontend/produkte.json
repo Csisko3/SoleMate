@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "name": "Nike Air Force 1 '07 Triple White",
+        "preis": "149.00€",
+        "bild": "air-force-1.png"
+    },
+    {
+        "id": 2,
+        "name": "Adidas Yeezy Boost 350 V2",
+        "preis": "299.00€",
+        "bild": "yeezy-350.jpeg"
+    },
+    {
+        "id": 3,
+        "name": "Nike Dunk Low Black White",
+        "preis": "119.00€",
+        "bild": "nike-dunk.png"
+    },
+    {
+        "id": 4,
+        "name": "Air Jordan 4 Military Black",
+        "preis": "399.00€",
+        "bild": "jordan-4-military.JPG"
+    },
+    {
+        "id": 5,
+        "name": "Air Jordan 1 High Lost & Found",
+        "preis": "349.00€",
+        "bild": "jordan-1-lf.JPG"
+    },
+    {
+        "id": 6,
+        "name": "Adidas Campus 00 Grey White",
+        "preis": "149.00€",
+        "bild": "adidas-campus.JPG"
+    }
+]
