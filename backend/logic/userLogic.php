@@ -78,14 +78,17 @@ class userLogic
 
 
             if ($stmt->execute()) {
-                echo "Benutzer erfolgreich registriert";
-/*                 $_SESSION['firstname'] = $vorname;
+                // echo "Benutzer erfolgreich registriert" ; gibt Fehler
+
+                /*    In Arbeit          
+                Sessions setzten für neuen User und zeigt dann "Hallo User" + was user sehen sollten
+                $_SESSION['firstname'] = $vorname;
                 $_SESSION['lastname'] = $nachname;
                 $_SESSION['username'] = $username;
                 $_SESSION['email'] = $email; */
                 //header("location: ../sites/index.php");
             } else {
-                echo "Fehler beim Einfügen des Benutzers: " .  $this->conn->close();
+                 $this->conn->close();
             }
         }
     }

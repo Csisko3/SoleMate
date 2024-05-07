@@ -21,14 +21,21 @@ class RequestHandler
         // Map the HTTP method and resource to the appropriate handler
         // GET, PUT, Delete coming 
         switch ($requestMethod) {
+
             case 'POST':
                 $this->handlePostRequest($resource);
                 break;
             case 'PUT':
                 // logic
                 break;
+            case 'GET':
+                //logic
+                break;
+            case 'DELETE':
+                //logic
+                break;
             default:
-                $this->error(501, "Method not implemented");
+            $this->error(405, ["Allow: GET, POST, DELETE"], "Method not allowed");  
                 break;
         }
     }
@@ -42,7 +49,7 @@ class RequestHandler
                 $this->success(201, $this->userLogic->saveUser($requestData));
                 break;
             default:
-                $this->outputJSON(['status' => 'error', 'message' => 'Invalid resource']);
+                 $this->error(400, [], "Method not allowed");
                 break;
         }
     }
@@ -58,22 +65,19 @@ class RequestHandler
         exit;
     }
 
-    private function outputJSON($response)
-    {
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }
-
     /** format error (with headers) and exit
      * @param int $code HTTP response code (4xx or 5xx)
-     * @param string $msg
+     * @param array $headers
+     * @param string $msg 
      */
-    private function error(int $code, $msg) {
+    private function error(int $code, array $headers, $msg) {
         http_response_code($code);
-        header('Content-Type: application/json');
-        echo json_encode(['error' => $msg]);
+        foreach ($headers as $hdr) {
+            header($hdr);
+        }    
+        echo ($msg);
         exit;
-    }
+    }     
 
     /** gets the post request body if it was json and returns it as json decoded
      * @return mixed
@@ -85,7 +89,7 @@ class RequestHandler
         $requestData = json_decode($requestBody, true);
         // Check if the request body is valid JSON
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error(400, "Invalid request body");
+            $this->error(400, [], "Invalid request body");
         }
         return $requestData;
     }

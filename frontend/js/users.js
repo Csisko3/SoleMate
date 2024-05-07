@@ -23,6 +23,10 @@ document.addEventListener("DOMContentLoaded", function () {
       success: function (response) {
           console.log("Successfully created user");
           alert("Benutzer erfolgreich registriert");
+
+          setTimeout(function () {
+          window.location.replace("index.php");
+          }, 3000); // Redirect after 3 seconds
       },
       error: function (xhr, status, error) {
         console.log("Error:", error);

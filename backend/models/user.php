@@ -14,8 +14,8 @@ class User {
 
 
 
-    function __construct($id, $gender, $fn, $ln, $adress, $postcode, $city,
-     $email, $password, $payment_info, $is_admin) {
+    function __construct(int $id, int $gender, string $fn, string $ln, string $adress, int $postcode, string $city,
+     string $email, string $password, string $payment_info, int $is_admin) {
         $this->id = $id;
         $this->gender = $gender;
         $this->firstname = $fn;
