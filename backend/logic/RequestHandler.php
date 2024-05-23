@@ -1,5 +1,6 @@
 <?php
 require_once "userLogic.php";
+require_once "userLogin.php";
 
 $requestHandler = new RequestHandler();
 $requestHandler->handleRequest();
@@ -7,9 +8,12 @@ $requestHandler->handleRequest();
 class RequestHandler
 {
     private $userLogic;
+    private $userLogin;
+    
 
     public function __construct() {
         $this->userLogic = new UserLogic();
+        $this->userLogin = new UserLogin();
     }
 
     
@@ -48,6 +52,10 @@ class RequestHandler
                 $requestData = $this->getTheRequestBody();
                 $this->success(201, $this->userLogic->saveUser($requestData));
                 break;
+            case 'login':
+                //Handle login
+                $requestData = $this->getTheRequestBody();
+                $this->success(200, $this->userLogin->loginUser($requestData));
             default:
                  $this->error(400, [], "Method not allowed");
                 break;

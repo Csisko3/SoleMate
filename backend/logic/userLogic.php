@@ -58,13 +58,13 @@ class userLogic
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // SQL-Abfrage zum Einfügen von Benutzerdaten
-        $sql = "INSERT INTO user (gender, firstname, lastname, adress, postcode, city, email, password, payment_info) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (gender, firstname, lastname, adress, postcode, city, email, username, password, payment_info) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $this->conn->prepare($sql)) {
             // Bind the parameters to the prepared statement
             $stmt->bind_param(
-                "isssissss",
+                "isssisssss",
                 $anrede,
                 $vorname,
                 $nachname,
@@ -72,6 +72,7 @@ class userLogic
                 $postcode,
                 $city,
                 $email,
+                $username,
                 $hashed_password,
                 $payment_info,
             );
