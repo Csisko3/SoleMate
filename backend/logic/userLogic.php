@@ -2,9 +2,9 @@
 
 require_once '../config/dbaccess.php';
 require_once '../models/user.php';
+session_start();
 
-class userLogic
-{
+class userLogic{
     private $conn;
 
     public function __construct()
@@ -77,7 +77,6 @@ class userLogic
                 $payment_info,
             );
 
-
             if ($stmt->execute()) {
                 // echo "Benutzer erfolgreich registriert" ; gibt Fehler
 
@@ -89,10 +88,37 @@ class userLogic
                 $_SESSION['email'] = $email; */
                 //header("location: ../sites/index.php");
             } else {
-                 $this->conn->close();
+                $this->conn->close();
             }
         }
     }
+
+    public function autoLogin($data)
+    {
+        if (!isset($_SESSION['user_id']) && isset($_COOKIE['user_id'])) {
+            $userId = $_COOKIE['user_id'];
+            $sql = "SELECT * FROM user WHERE ID = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $_SESSION['user_id'] = $row['ID'];
+                $_SESSION['username'] = $row['username'];
+                $_SESSION['is_admin'] = $row['is_admin'];
+
+                $stmt->close();
+                return true;
+            }
+
+            $stmt->close();
+        }
+
+        return false;
+    }
+
 
 }
 

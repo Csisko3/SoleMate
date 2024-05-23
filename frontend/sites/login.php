@@ -1,6 +1,7 @@
 <?php
 session_start(); // Start the session at the top of the file.
 include '../res/layout/header.php';
+include '../res/layout/navbar.php';
 ?>
 
 <body>
@@ -10,8 +11,8 @@ include '../res/layout/header.php';
             <img class="mt-4 mb-2" src="../res/img/logo.png" height="70" alt="Hotel Logo">
             <h1 class="h3 mb-3 font-weight-normal">Anmelden</h1>
 
-            <label for="email" class="visually-hidden">Email Adresse</label>
-            <input type="email" id="email" name="email" class="form-control login-em" placeholder="Email Adresse"
+            <label for="login" class="visually-hidden">Login</label>
+            <input type="text" id="username" name="username" class="form-control login-em" placeholder="Email Adresse oder Username"
                 required autofocus>
 
             <label for="password" class="visually-hidden">Passwort</label>
@@ -20,7 +21,7 @@ include '../res/layout/header.php';
 
             <div class="mt-3 checkbox">
                 <label>
-                    <input class="checkbox mb-3" type="checkbox" value="angemeldet-bleiben"> Angemeldet bleiben
+                    <input class="checkbox mb-3" name="remember" id="remember" type="checkbox" value="angemeldet-bleiben"> Angemeldet bleiben
                 </label>
             </div>
             <div>

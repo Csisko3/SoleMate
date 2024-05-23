@@ -18,19 +18,56 @@ class userLogin
 
     public function loginUser($data)
     {
-        $email = $data['email'] ?? '';
-        $password = $data['password'] ?? '';
+        // if (!isset($data['username'])) {
+        //     die('Kein Benutzername angegeben');
+        // }
 
-        $sql = "SELECT * FROM user WHERE email = '$email'";
-        $result = $this->conn->query($sql);
+        $username = $data['username'] ?? '';
+        $password = $data['password'] ?? '';
+        $remember = $data['remember'] ?? false;
+
+        $sql = "SELECT * FROM user WHERE username = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
+            
             if (password_verify($password, $row['password'])) {
-                return $row;
+                // Setzen der Sessions
+                $_SESSION['user_id'] = $row['ID'];
+                $_SESSION['username'] = $row['username'];
+                $_SESSION['is_admin'] = $row['is_admin'];
+
+                // Setzen des Cookies, wenn "Login merken" aktiviert ist
+                if ($remember) {
+                    setcookie('user_id', $row['ID'], time() + 31536000, "/"); // 1 year
+                }
+
+                return [
+                    'success' => true,
+                    'message' => 'Login erfolgreich',
+                    'user' => [
+                        'id' => $row['ID'],
+                        'username' => $row['username'],
+                        'is_admin' => $row['is_admin']
+                    ]
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Falsches Passwort!'
+                ];
             }
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Benutzername nicht gefunden!'
+            ];
         }
-        return null;
     }
 
 }
