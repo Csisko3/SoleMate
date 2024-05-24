@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<html lang="de">
-
-
 <nav class="navbar navbar-expand-sm">
     <div class="container">
         <a class="navbar-brand" href="./index.php"><img src="../res/img/logo.png" alt="Logo" width="30"
@@ -43,7 +39,7 @@
                             <span class="nav-link mx-lg-2 hallo"> Hallo, ' . $_SESSION['username'] . '</span>
                         </div>';
                     echo '<li class="nav-item">
-                            <a class="nav-link mx-lg-2 bla" href="?action=logout">Abmelden</a>
+                            <a class="nav-link mx-lg-2 bla" href="../res/layout/logout.php">Abmelden</a>
                         </li>';
                     echo '<li class="nav-item">
                         <a class="nav-link mx-lg-2 bla" href="sites/profile_manager.php">Profil bearbeiten</a>
@@ -57,7 +53,7 @@
                     }
                 } else {
                     echo '<li class="nav-item">
-                            <a class="nav-link mx-lg-2 bla" href="sites/login.php">Login</a>
+                            <a class="nav-link mx-lg-2 bla" href="login.php">Login</a>
                           </li>';
                 }
                 ?>
@@ -75,5 +71,3 @@ if (isset($_GET["action"]) && $_GET["action"] === "logout") {
     exit();
 }
 ?>
-</body>
-</html>

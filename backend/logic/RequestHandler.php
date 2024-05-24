@@ -1,5 +1,6 @@
 <?php
 require_once "userLogic.php";
+require_once "userLogin.php";
 
 $requestHandler = new RequestHandler();
 $requestHandler->handleRequest();
@@ -7,9 +8,14 @@ $requestHandler->handleRequest();
 class RequestHandler
 {
     private $userLogic;
+    private $userLogin;
+    private $autoLogin;
+
+    
 
     public function __construct() {
         $this->userLogic = new UserLogic();
+        $this->userLogin = new UserLogin();
     }
 
     
@@ -17,6 +23,7 @@ class RequestHandler
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
         $resource = $_GET['resource'] ?? '';
+        $params = $_GET['params'] ?? [];
 
         // Map the HTTP method and resource to the appropriate handler
         // GET, PUT, Delete coming 
@@ -29,7 +36,7 @@ class RequestHandler
                 // logic
                 break;
             case 'GET':
-                //logic
+                $this->handleGetRequest($resource, $params);
                 break;
             case 'DELETE':
                 //logic
@@ -47,6 +54,24 @@ class RequestHandler
                 // Handle creating a new user
                 $requestData = $this->getTheRequestBody();
                 $this->success(201, $this->userLogic->saveUser($requestData));
+                break;
+            case 'login':
+                //Handle login
+                $requestData = $this->getTheRequestBody();
+                $this->success(200, $this->userLogin->loginUser($requestData));
+            default:
+                 $this->error(400, [], "Method not allowed");
+                break;
+        }
+    }
+
+    public function handleGetRequest($resource, $params)
+    {
+        switch ($resource) {
+            case 'autoLogin':
+                // remeber funktion
+                $requestData = []; // Assign an empty array as the default value for $requestData
+                $this->success(201, $this->userLogic->autoLogin($requestData));
                 break;
             default:
                  $this->error(400, [], "Method not allowed");

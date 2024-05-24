@@ -2,9 +2,9 @@
 
 require_once '../config/dbaccess.php';
 require_once '../models/user.php';
+session_start();
 
-class userLogic
-{
+class userLogic{
     private $conn;
 
     public function __construct()
@@ -58,13 +58,13 @@ class userLogic
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // SQL-Abfrage zum Einfügen von Benutzerdaten
-        $sql = "INSERT INTO user (gender, firstname, lastname, adress, postcode, city, email, password, payment_info) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (gender, firstname, lastname, adress, postcode, city, email, username, password, payment_info) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = $this->conn->prepare($sql)) {
             // Bind the parameters to the prepared statement
             $stmt->bind_param(
-                "isssissss",
+                "isssisssss",
                 $anrede,
                 $vorname,
                 $nachname,
@@ -72,10 +72,10 @@ class userLogic
                 $postcode,
                 $city,
                 $email,
+                $username,
                 $hashed_password,
                 $payment_info,
             );
-
 
             if ($stmt->execute()) {
                 // echo "Benutzer erfolgreich registriert" ; gibt Fehler
@@ -88,10 +88,37 @@ class userLogic
                 $_SESSION['email'] = $email; */
                 //header("location: ../sites/index.php");
             } else {
-                 $this->conn->close();
+                $this->conn->close();
             }
         }
     }
+
+    public function autoLogin($data)
+    {
+        if (!isset($_SESSION['user_id']) && isset($_COOKIE['user_id'])) {
+            $userId = $_COOKIE['user_id'];
+            $sql = "SELECT * FROM user WHERE ID = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $_SESSION['user_id'] = $row['ID'];
+                $_SESSION['username'] = $row['username'];
+                $_SESSION['is_admin'] = $row['is_admin'];
+
+                $stmt->close();
+                return true;
+            }
+
+            $stmt->close();
+        }
+
+        return false;
+    }
+
 
 }
 
