@@ -44,7 +44,7 @@ class userLogin
 
                 // Setzen des Cookies, wenn "Login merken" aktiviert ist
                 if ($remember) {
-                    setcookie('user_id', $row['ID'], time() + 31536000, "/"); // 1 year
+                    setcookie('user_id', $row['ID'], time() + 31536000, "/"); // 1 year - "/" means the cookie is available in the whole domains
                 }
 
                 return [

@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.getElementById("loginForm");
 
-    autoLogin();   // automatisches Login
-
+    // Überprüfen, ob der Benutzer-Cookie gesetzt ist
+    if (document.cookie.split(';').some((item) => item.trim().startsWith('user_id='))) {
+        autoLogin(); // Automatisches Login
+    }
 
     $("#loginForm").on("submit", function (e) {
         e.preventDefault(); // verhindert die Standardaktion
