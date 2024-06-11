@@ -37,4 +37,33 @@ class ProductLogic
         return ['success' => true, 'data' => $products];
     }
 
+    public function searchProducts($query)
+    {
+        global $host, $db_user, $db_password, $database;
+        $conn = new mysqli($host, $db_user, $db_password, $database);
+
+        if ($conn->connect_error) {
+            return ['success' => false, 'message' => 'Database connection failed'];
+        }
+
+        // Bereiten Sie die Abfrage für LIKE vor
+        $searchQuery = '%' . $query . '%'; // Suche nach Begriffen, die die Abfrage enthalten
+        $sql = "SELECT * FROM products WHERE name LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $searchQuery);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $products = [];
+        while ($row = $result->fetch_assoc()) {
+            $products[] = $row;
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return ['success' => true, 'data' => $products];
+
+    }
+
 }

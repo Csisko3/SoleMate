@@ -1,14 +1,18 @@
 $(document).ready(function () {
-
-    let isLoggedIn = false; // Variable zum Speichern des Login-Status
-    checkLoginStatus(); // Überprüfen des Login-Status beim Laden der Seite für den Kauf
-    // checkLoginStatus() ladet auch die Produkte auf die Seite
-    
+  let isLoggedIn = false; // Variable zum Speichern des Login-Status
+  checkLoginStatus(); // Überprüfen des Login-Status beim Laden der Seite für den Kauf
+  // checkLoginStatus() ladet auch die Produkte auf die Seite
 
   // Klick-Event für Filter-Buttons
   $(".filter-btn").on("click", function () {
     const category = $(this).data("category");
     loadProducts(category);
+  });
+
+  // Event-Listener für das Suchfeld
+  $('#searchInput').on('input', function () {
+    const query = $(this).val();
+    searchProducts(query);
   });
 
   // Funktion zum Laden der Produkte
@@ -20,11 +24,13 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.success) {
-            $('#produktContainer').empty();
-            response.data.forEach(function (product) {
-                const addToCartButton = isLoggedIn ? `<button class="btn btn-primary add-to-cart" data-id="${product.id}">In den Warenkorb</button>` : '';
-                // Option zum kaufen soll erst dann aufscheinen, wenn der User eingeloggt ist
-                $('#produktContainer').append(`
+          $("#produktContainer").empty();
+          response.data.forEach(function (product) {
+            const addToCartButton = isLoggedIn
+              ? `<button class="btn btn-primary add-to-cart" data-id="${product.id}">In den Warenkorb</button>`
+              : "";
+            // Option zum kaufen soll erst dann aufscheinen, wenn der User eingeloggt ist
+            $("#produktContainer").append(`
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
                             <img src="/SoleMate/frontend/res/img/${product.picture}" class="card-img-top" alt="${product.name}">
@@ -36,7 +42,7 @@ $(document).ready(function () {
                         </div>
                     </div>
                 `);
-            });
+          });
         } else {
           console.log("Fehler beim Laden der Produkte:", response.message);
         }
@@ -79,8 +85,8 @@ $(document).ready(function () {
   }
 
   // Funktion zum Aktualisieren der Warenkorb-Anzahl
-// Funktion zum Aktualisieren der Warenkorb-Anzahl
-/*
+  // Funktion zum Aktualisieren der Warenkorb-Anzahl
+  /*
 function updateCartCount() {
     $.ajax({
         type: "GET",
@@ -125,4 +131,45 @@ function updateCartCount() {
     });
   }
 
+  function searchProducts(query) {
+    $.ajax({
+      type: "GET",
+      url: "/SoleMate/backend/logic/RequestHandler.php",
+      data: { resource: "search_products", query: query },
+      dataType: "json",
+      success: function (response) {
+        console.log(query)
+        console.log("Search Response:", response); // Debugging output
+        $("#produktContainer").empty();
+        if (response.success && response.data.length > 0) {
+          response.data.forEach(function (product) {
+            const addToCartButton = isLoggedIn
+              ? `<button class="btn btn-primary add-to-cart" data-id="${product.id}">In den Warenkorb</button>`
+              : "";
+            $("#produktContainer").append(`
+              <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                  <img src="/SoleMate/frontend/res/img/${product.picture}" class="card-img-top" alt="${product.name}">
+                  <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5>
+                    <p class="card-text">${product.price} €</p>
+                    ${addToCartButton}
+                  </div>
+                </div>
+              </div>
+            `);
+          });
+        } else {
+          $("#produktContainer").empty().append("<p>Kein Produkt gefunden</p>");
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log("Error:", error);
+        console.log("Response Text:", xhr.responseText);
+      },
+    });
+  }
+
+
+  
 });

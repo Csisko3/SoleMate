@@ -45,7 +45,7 @@
             <form class="d-flex ms-auto position-relative" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
                     id="searchInput">
-                <button class="btn btn-dark" type="submit">Suchen</button>
+                <!-- <button class="btn btn-dark" type="submit">Suchen</button> -->
                 <div id="suggestions" class="list-group position-absolute"></div>
             </form>
         </div>

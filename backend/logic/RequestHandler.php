@@ -22,7 +22,7 @@ class RequestHandler
         $this->userLogic = new UserLogic();
         $this->userLogin = new UserLogin();
         $this->productLogic = new ProductLogic();
-        $this ->cartLogic = new CartLogic();
+        $this->cartLogic = new CartLogic();
     }
 
 
@@ -97,9 +97,13 @@ class RequestHandler
                 $category = $params['category'] ?? '';
                 $this->success(200, $this->productLogic->load_products($category));
                 break;
+            case 'search_products':
+                $query = $_GET['query'] ?? '';
+                $this->success(200, $this->productLogic->searchProducts($query));
+                break;
             case 'checkLoginStatus':
                 $this->success(200, $this->userLogic->checkLoginStatus());
-                break;    
+                break;
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
