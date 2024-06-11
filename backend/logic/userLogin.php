@@ -70,4 +70,14 @@ class userLogin
         }
     }
 
+    private function checkLoginStatus()
+    {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
+        $isLoggedIn = isset($_SESSION['user_id']);
+        return ['success' => true, 'isLoggedIn' => $isLoggedIn];
+    }
+
 }

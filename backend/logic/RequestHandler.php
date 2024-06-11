@@ -1,6 +1,11 @@
 <?php
+
 require_once "userLogic.php";
 require_once "userLogin.php";
+require_once "productLogic.php";
+require_once "cartLogic.php";
+
+
 
 $requestHandler = new RequestHandler();
 $requestHandler->handleRequest();
@@ -9,17 +14,20 @@ class RequestHandler
 {
     private $userLogic;
     private $userLogin;
-    private $autoLogin;
+    private $productLogic;
+    private $cartLogic;
 
-    
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->userLogic = new UserLogic();
         $this->userLogin = new UserLogin();
+        $this->productLogic = new ProductLogic();
+        $this ->cartLogic = new CartLogic();
     }
 
-    
-    public function handleRequest() {
+
+    public function handleRequest()
+    {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
         $resource = $_GET['resource'] ?? '';
@@ -42,7 +50,7 @@ class RequestHandler
                 //logic
                 break;
             default:
-            $this->error(405, ["Allow: GET, POST, DELETE"], "Method not allowed");  
+                $this->error(405, ["Allow: GET, POST, DELETE"], "Method not allowed");
                 break;
         }
     }
@@ -59,8 +67,19 @@ class RequestHandler
                 //Handle login
                 $requestData = $this->getTheRequestBody();
                 $this->success(200, $this->userLogin->loginUser($requestData));
+                break;
+            case 'add_cart':
+                $requestData = $this->getTheRequestBody();
+                if (!isset($_SESSION)) {
+                    session_start();
+                }
+                if (!isset($_SESSION['user_id'])) {
+                    $this->error(401, [], "User not logged in");
+                }
+                $this->success(200, $this->cartLogic->addToCart($_SESSION['user_id'], $requestData['product_id']));
+                break;
             default:
-                 $this->error(400, [], "Method not allowed");
+                $this->error(400, [], "Method not allowed");
                 break;
         }
     }
@@ -73,8 +92,16 @@ class RequestHandler
                 $requestData = []; // Assign an empty array as the default value for $requestData
                 $this->success(201, $this->userLogic->autoLogin($requestData));
                 break;
+            case 'load_products':
+                // Produkte laden
+                $category = $params['category'] ?? '';
+                $this->success(200, $this->productLogic->load_products($category));
+                break;
+            case 'checkLoginStatus':
+                $this->success(200, $this->userLogic->checkLoginStatus());
+                break;    
             default:
-                 $this->error(400, [], "Method not allowed");
+                $this->error(400, [], "Method not allowed");
                 break;
         }
     }
@@ -83,7 +110,8 @@ class RequestHandler
     /** format success response and exit
      * @param mixed $data object, could be "anything"
      */
-    private function success(int $code, mixed $data) {
+    private function success(int $code, mixed $data)
+    {
         http_response_code($code);
         header('Content-Type: application/json');
         echo json_encode($data);
@@ -95,14 +123,15 @@ class RequestHandler
      * @param array $headers
      * @param string $msg 
      */
-    private function error(int $code, array $headers, $msg) {
+    private function error(int $code, array $headers, $msg)
+    {
         http_response_code($code);
         foreach ($headers as $hdr) {
             header($hdr);
-        }    
+        }
         echo ($msg);
         exit;
-    }     
+    }
 
     /** gets the post request body if it was json and returns it as json decoded
      * @return mixed
@@ -118,4 +147,5 @@ class RequestHandler
         }
         return $requestData;
     }
+
 }
