@@ -120,5 +120,11 @@ class userLogic{
     }
 
 
+    // Checking if user is logged in so they can make purchases
+    public function checkLoginStatus()
+    {
+        $isLoggedIn = isset($_SESSION['user_id']);
+        return ['success' => true, 'isLoggedIn' => $isLoggedIn];
+    }
 }
 
