@@ -61,10 +61,17 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`ID`, `name`, `price`, `category`, `picture`) VALUES
 (1, 'Nike Air Force 1 \'07 Triple White', '149.00', 'Nike', 'air-force-1.png'),
+<<<<<<< HEAD
 (2, 'Adidas Yeezy Boost 350 V2', '299.00', 'Adiddas', 'yeezy-350.jpeg'),
 (3, 'Nike Dunk Low Black White', '119.00', 'Nike', 'nike-dunk.png'),
 (4, 'Air Jordan 4 Military Black', '399.00', 'Jordan', 'jordan-4-military.jpg'),
 (6, 'Adidas Campus 00 Grey White', '149.00', 'Addidas', 'adidas-campus.jpg');
+=======
+(2, 'Adidas Yeezy Boost 350 V2', '299.00', 'Adidas', 'yeezy-350.jpeg'),
+(3, 'Nike Dunk Low Black White', '119.00', 'Nike', 'nike-dunk.png'),
+(4, 'Air Jordan 4 Military Black', '399.00', 'Jordan', 'jordan-4-military.jpg'),
+(6, 'Adidas Campus 00 Grey White', '149.00', 'Adidas', 'adidas-campus.jpg');
+>>>>>>> 23679b6165f14fdf5538542eb8623b06199585a0
 
 -- --------------------------------------------------------
 
