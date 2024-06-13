@@ -68,6 +68,10 @@ class RequestHandler
                 $requestData = $this->getTheRequestBody();
                 $this->success(200, $this->userLogin->loginUser($requestData));
                 break;
+            case 'update_profile':
+                $requestData = $this->getTheRequestBody();
+                $this->success(200, $this->userLogic->updateProfile($_SESSION['user_id'], $requestData));
+                break;
             case 'add_cart':
                 $requestData = $this->getTheRequestBody();
                 if (!isset($_SESSION)) {
@@ -103,6 +107,9 @@ class RequestHandler
                 break;
             case 'checkLoginStatus':
                 $this->success(200, $this->userLogic->checkLoginStatus());
+                break;
+            case 'load_profile':
+                $this->success(200, $this->userLogic->loadProfile($_SESSION['user_id']));
                 break;
             default:
                 $this->error(400, [], "Method not allowed");

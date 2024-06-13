@@ -126,5 +126,139 @@ class userLogic{
         $isLoggedIn = isset($_SESSION['user_id']);
         return ['success' => true, 'isLoggedIn' => $isLoggedIn];
     }
+
+    //-------------------------------Profilemanager-------------------------------------------------
+
+    public function loadProfile($userId)
+{
+    global $host, $db_user, $db_password, $database;
+    $conn = new mysqli($host, $db_user, $db_password, $database);
+
+    if ($conn->connect_error) {
+        return ['success' => false, 'message' => 'Database connection failed'];
+    }
+
+    $sql = "SELECT username, email, firstname, lastname, adress, postcode, city, payment_info FROM user WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        $conn->close();
+        return ['success' => true, 'data' => $user];
+    } else {
+        $stmt->close();
+        $conn->close();
+        return ['success' => false, 'message' => 'User not found'];
+    }
+}
+
+public function updateProfile($userId, $data)
+{
+    global $host, $db_user, $db_password, $database;
+    $conn = new mysqli($host, $db_user, $db_password, $database);
+
+    if ($conn->connect_error) {
+        return ['success' => false, 'message' => 'Database connection failed'];
+    }
+
+    // Verify current password
+    $password = $data['password'] ?? '';
+    $sql = "SELECT * FROM user WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (!password_verify($password, $user['password'])) {
+            $stmt->close();
+            $conn->close();
+            return ['success' => false, 'message' => 'Incorrect password'];
+        }
+    } else {
+        $stmt->close();
+        $conn->close();
+        return ['success' => false, 'message' => 'User not found'];
+    }
+
+    // Prepare update fields and parameters
+    $updates = [];
+    $params = [];
+    $types = '';
+
+    // only update fields that have changed to prevent masked details overwriting
+    
+    if (!empty($data['email']) && $data['email'] !== $user['email']) {
+        $updates[] = "email = ?";
+        $params[] = $data['email'];
+        $types .= 's';
+    }
+    if (!empty($data['firstname']) && $data['firstname'] !== $user['firstname']) {
+        $updates[] = "firstname = ?";
+        $params[] = $data['firstname'];
+        $types .= 's';
+    }
+    if (!empty($data['lastname']) && $data['lastname'] !== $user['lastname']) {
+        $updates[] = "lastname = ?";
+        $params[] = $data['lastname'];
+        $types .= 's';
+    }
+    if (!empty($data['adress']) && $data['adress'] !== $user['adress']) {
+        $updates[] = "adress = ?";
+        $params[] = $data['adress'];
+        $types .= 's';
+    }
+    if (!empty($data['postcode']) && $data['postcode'] !== $user['postcode']) {
+        $updates[] = "postcode = ?";
+        $params[] = $data['postcode'];
+        $types .= 's';
+    }
+    if (!empty($data['city']) && $data['city'] !== $user['city']) {
+        $updates[] = "city = ?";
+        $params[] = $data['city'];
+        $types .= 's';
+    }
+    if (!empty($data['payment_info']) && $data['payment_info'] !== $user['payment_info']) {
+        $updates[] = "payment_info = ?";
+        $params[] = $data['payment_info'];
+        $types .= 's';
+    }
+    if (!empty($data['new_password'])) {
+        $new_password = password_hash($data['new_password'], PASSWORD_DEFAULT);
+        $updates[] = "password = ?";
+        $params[] = $new_password;
+        $types .= 's';
+    }
+
+    // Ensure there is something to update
+    if (empty($updates)) {
+        $conn->close();
+        return ['success' => false, 'message' => 'No changes detected'];
+    }
+
+    $types .= 'i';  // Add type for user ID
+    $params[] = $userId;
+
+    $sql = "UPDATE user SET " . implode(', ', $updates) . " WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($types, ...$params);
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        $conn->close();
+        return ['success' => true, 'message' => 'Profile updated successfully'];
+    } else {
+        $stmt->close();
+        $conn->close();
+        return ['success' => false, 'message' => 'Failed to update profile'];
+    }
+}
+
+
 }
 
