@@ -19,14 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
       cache: false,
       data: JSON.stringify(json), //converts js object into string format
       dataType: "json",
-      contentType: 'application/json',
+      contentType: "application/json",
       success: function (response) {
-          console.log("Successfully created user");
-          alert("Benutzer erfolgreich registriert");
+        console.log("Successfully created user");
+        alert("Benutzer erfolgreich registriert");
 
-          setTimeout(function () {
+        setTimeout(function () {
           window.location.replace("index.php");
-          }, 3000); // Redirect after 3 seconds
+        }, 3000); // Redirect after 3 seconds
       },
       error: function (xhr, status, error) {
         console.log("Error:", error);
@@ -35,17 +35,89 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /**
-   * Creates a json object including fields in the form
-   *
-   * @param {HTMLElement} form The form element to convert
-   * @return {Object} The form data
-   */
-  const getFormJSON = (form) => {
-    const data = new FormData(form);
-    return Array.from(data.keys()).reduce((result, key) => {
-      result[key] = data.get(key);
-      return result;
-    }, {});
-  };
+  //--------------------Admin Funktionen--------------------
+
+  $(document).ready(function () {
+    loadCustomers();
+
+    function loadCustomers() {
+      $.ajax({
+        type: "GET",
+        url: "/SoleMate/backend/logic/RequestHandler.php?resource=loadCustomers",
+        dataType: "json",
+        success: function (response) {
+          if (response.success) {
+            $("#customerList").empty();
+            response.data.forEach(function (customer) {
+              $("#customerList").append(`
+                <tr>
+                  <td>${customer.username}</td>
+                  <td>${customer.firstname}</td>
+                  <td>${customer.lastname}</td>
+                  <td>${customer.adress}</td>
+                  <td>${customer.email}</td>
+                  <td>${customer.is_active == 1 ? "Aktiv" : "Deaktiviert"}</td>
+                  <td>
+                    ${
+                      customer.is_active == 1
+                        ? `<button class="btn btn-sm btn-danger change-customer-status" data-id="${customer.id}" data-status="deactivate">Deaktivieren</button>`
+                        : `<button class="btn btn-sm btn-success change-customer-status" data-id="${customer.id}" data-status="activate">Aktivieren</button>`
+                    }
+                  </td>
+                </tr>
+              `);
+            });
+
+            $(".change-customer-status").on("click", function () {
+              const customerId = $(this).data("id");
+              const statusAction = $(this).data("status");
+              changeCustomerStatus(customerId, statusAction);
+            });
+          } else {
+            alert("Fehler beim Laden der Kunden: " + response.message);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log("Error:", error);
+        },
+      });
+    }
+
+    function changeCustomerStatus(customerId, action) {
+      const confirmMessage =
+        action === "deactivate"
+          ? "Möchten Sie diesen Kunden wirklich deaktivieren?"
+          : "Möchten Sie diesen Kunden wirklich aktivieren?";
+
+      if (confirm(confirmMessage)) {
+        $.ajax({
+          type: "POST",
+          url: "/SoleMate/backend/logic/RequestHandler.php?resource=change_customer_status",
+          data: JSON.stringify({ id: customerId, action: action }),
+          contentType: "application/json",
+          dataType: "json",
+          success: function (response) {
+            if (response.success) {
+              alert(
+                "Kunde erfolgreich " +
+                  (action === "deactivate" ? "deaktiviert" : "aktiviert") +
+                  "."
+              );
+              loadCustomers();
+            } else {
+              alert(
+                "Fehler beim " +
+                  (action === "deactivate" ? "Deaktivieren" : "Aktivieren") +
+                  " des Kunden: " +
+                  response.message
+              );
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log("Error:", error);
+          },
+        });
+      }
+    }
+  });
 });

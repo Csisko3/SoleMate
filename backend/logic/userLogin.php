@@ -35,12 +35,21 @@ class userLogin
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
+
+
             
             if (password_verify($password, $row['password'])) {
                 // Setzen der Sessions
                 $_SESSION['user_id'] = $row['ID'];
                 $_SESSION['username'] = $row['username'];
                 $_SESSION['is_admin'] = $row['is_admin'];
+
+                if ($row['is_active'] == 0) {
+                    return [
+                        'success' => false,
+                        'message' => 'Ihr Account wurde deaktiviert!'
+                    ];
+                }
 
                 // Setzen des Cookies, wenn "Login merken" aktiviert ist
                 if ($remember) {

@@ -1,5 +1,4 @@
 <?php
-
 require_once '../config/dbaccess.php';
 require_once '../models/user.php';
 session_start();
@@ -104,6 +103,7 @@ class userLogic{
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
+
                 $row = $result->fetch_assoc();
                 $_SESSION['user_id'] = $row['ID'];
                 $_SESSION['username'] = $row['username'];
@@ -126,5 +126,55 @@ class userLogic{
         $isLoggedIn = isset($_SESSION['user_id']);
         return ['success' => true, 'isLoggedIn' => $isLoggedIn];
     }
+
+    //----------------------------Admin Funktionen--------------------------------
+    public function loadCustomers()
+    {
+        global $host, $db_user, $db_password, $database;
+        $conn = new mysqli($host, $db_user, $db_password, $database);
+
+        if ($conn->connect_error) {
+            return ['success' => false, 'message' => 'Database connection failed'];
+        }
+
+        $sql = "SELECT id, username, firstname, lastname, adress, email, is_active FROM user where is_admin = 0";
+        $result = $conn->query($sql);
+
+        $customers = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $customers[] = $row;
+            }
+        }
+
+        $conn->close();
+        return ['success' => true, 'data' => $customers];
+    }
+
+    public function changeCustomerStatus($customerId, $action)
+    {
+        global $host, $db_user, $db_password, $database;
+        $conn = new mysqli($host, $db_user, $db_password, $database);
+
+        if ($conn->connect_error) {
+            return ['success' => false, 'message' => 'Database connection failed'];
+        }
+
+        $isActive = ($action === 'activate') ? 1 : 0;
+        $sql = "UPDATE user SET is_active = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $isActive, $customerId);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            return ['success' => true, 'message' => 'Customer status changed successfully'];
+        } else {
+            $stmt->close();
+            $conn->close();
+            return ['success' => false, 'message' => 'Failed to change customer status'];
+        }
+    }
 }
+
 

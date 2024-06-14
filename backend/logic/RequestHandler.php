@@ -89,6 +89,14 @@ class RequestHandler
                 }
                 $this->success(200, $this->cartLogic->addToCart($_SESSION['user_id'], $requestData['product_id']));
                 break;
+            case 'change_customer_status':
+                $requestData = $this->getTheRequestBody();
+                $customerId = $requestData['id'] ?? 0;
+                $action = $requestData['action'] ?? '';
+                if ($customerId > 0 && in_array($action, ['activate', 'deactivate']))
+                    $this->success(200, $this->userLogic->changeCustomerStatus($customerId, $action));
+                break;
+
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
@@ -134,6 +142,10 @@ class RequestHandler
 
                 }
                 break;
+            case 'loadCustomers':
+                $this->success(200, $this->userLogic->loadCustomers());
+                break;
+
             default:
                 $this->error(400, [], "Method not allowed");
                 break;

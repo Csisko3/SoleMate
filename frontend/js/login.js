@@ -21,14 +21,12 @@ document.addEventListener("DOMContentLoaded", function () {
             type: "POST",
             url: "/SoleMate/backend/logic/RequestHandler.php?resource=login",
             cache: false,
-            data: JSON.stringify(json), // konvertiert JS-Objekt in String-Format
+            data: JSON.stringify(json), // konvertiert js-Objekt in String-Format
             dataType: "json",
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
                     console.log("Successfully logged in");
-                    alert("Login erfolgreich");
-
                     setTimeout(function () {
                         window.location.replace("index.php");
                     });
