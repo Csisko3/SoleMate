@@ -72,8 +72,6 @@ class RequestHandler
                 $requestData = $this->getTheRequestBody();
                 $this->success(200, $this->userLogic->updateProfile($_SESSION['user_id'], $requestData));
                 break;
-<<<<<<< HEAD
-
             case 'add_product':
                 $this->success(200, $this->productLogic->addProduct());
                 break;
@@ -87,8 +85,6 @@ class RequestHandler
                 }
                 break;
 
-=======
->>>>>>> profileManager
             case 'add_cart':
                 $requestData = $this->getTheRequestBody();
                 if (!isset($_SESSION)) {
@@ -129,16 +125,15 @@ class RequestHandler
                 $this->success(200, $this->productLogic->load_products());
                 break;
             case 'search_products':
-                $query = $params['query'] ?? '';
-                $this->success(200, $this->productLogic->searchProducts($query));
-                break;
+                    $query = $_GET['query'] ?? '';
+                    $this->success(200, $this->productLogic->searchProducts($query));
+                    break;
             case 'checkLoginStatus':
                 $this->success(200, $this->userLogic->checkLoginStatus());
                 break;
             case 'load_profile':
                 $this->success(200, $this->userLogic->loadProfile($_SESSION['user_id']));
                 break;
-<<<<<<< HEAD
             case 'get_product':
                 $productId = $_GET['id'] ?? 0;  // Use $_GET to fetch the product ID from the query string
                 if ($productId > 0) {
@@ -162,8 +157,6 @@ class RequestHandler
                 if ($productId > 0)
                     $this->success(200, $this->productLogic->deleteProduct($productId));
                 break;
-=======
->>>>>>> profileManager
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
