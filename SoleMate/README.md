@@ -1,2 +1,0 @@
-# SoleMate
-Webshop für Schuhgeschäft

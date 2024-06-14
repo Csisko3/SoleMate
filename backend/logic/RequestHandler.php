@@ -4,7 +4,7 @@ require_once "userLogic.php";
 require_once "userLogin.php";
 require_once "productLogic.php";
 require_once "cartLogic.php";
-
+require_once "adminProduct.php";
 
 
 $requestHandler = new RequestHandler();
@@ -16,6 +16,7 @@ class RequestHandler
     private $userLogin;
     private $productLogic;
     private $cartLogic;
+    private $adminProduct;
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class RequestHandler
         $this->userLogin = new UserLogin();
         $this->productLogic = new ProductLogic();
         $this->cartLogic = new CartLogic();
+        //$this->adminProduct = new AdminProduct();
     }
 
 
@@ -41,13 +43,13 @@ class RequestHandler
                 $this->handlePostRequest($resource);
                 break;
             case 'PUT':
-                // logic
+                $this->handlePutRequest($resource);
                 break;
             case 'GET':
                 $this->handleGetRequest($resource, $params);
                 break;
             case 'DELETE':
-                //logic
+                $this->handleDeleteRequest($resource);
                 break;
             default:
                 $this->error(405, ["Allow: GET, POST, DELETE"], "Method not allowed");
@@ -59,14 +61,23 @@ class RequestHandler
     {
         switch ($resource) {
             case 'user':
-                // Handle creating a new user
                 $requestData = $this->getTheRequestBody();
                 $this->success(201, $this->userLogic->saveUser($requestData));
                 break;
             case 'login':
-                //Handle login
                 $requestData = $this->getTheRequestBody();
                 $this->success(200, $this->userLogin->loginUser($requestData));
+                break;
+            case 'add_product':
+                $this->success(200, $this->productLogic->addProduct());
+                break;
+            case 'edit_product':
+                $productId = $_GET['id'] ?? 0;
+                if ($productId > 0) {
+                    $this->success(200, $this->productLogic->editProduct($productId));
+                } else {
+                    $this->error(400, [], "Invalid product ID");
+                }
                 break;
             case 'add_cart':
                 $requestData = $this->getTheRequestBody();
@@ -84,25 +95,59 @@ class RequestHandler
         }
     }
 
+    public function handlePutRequest($resource)
+    {
+        switch ($resource) {
+            default:
+                $this->error(400, [], "Method not allowed");
+                break;
+        }
+    }
+
     public function handleGetRequest($resource, $params)
     {
         switch ($resource) {
             case 'autoLogin':
-                // remeber funktion
-                $requestData = []; // Assign an empty array as the default value for $requestData
+                $requestData = [];
                 $this->success(201, $this->userLogic->autoLogin($requestData));
                 break;
             case 'load_products':
-                // Produkte laden
                 $category = $params['category'] ?? '';
                 $this->success(200, $this->productLogic->load_products($category));
                 break;
+            case 'admin_load_products':
+                $this->success(200, $this->productLogic->load_products());
+                break;
             case 'search_products':
-                $query = $_GET['query'] ?? '';
+                $query = $params['query'] ?? '';
                 $this->success(200, $this->productLogic->searchProducts($query));
                 break;
             case 'checkLoginStatus':
                 $this->success(200, $this->userLogic->checkLoginStatus());
+                break;
+            case 'get_product':
+                $productId = $_GET['id'] ?? 0;  // Use $_GET to fetch the product ID from the query string
+                if ($productId > 0) {
+                    $productData = $this->productLogic->getProduct($productId);
+                    if ($productData)
+                        $this->success(200, $productData);
+
+                }
+                break;
+            default:
+                $this->error(400, [], "Method not allowed");
+                break;
+        }
+    }
+
+    public function handleDeleteRequest($resource)
+    {
+        switch ($resource) {
+            case 'delete_product':
+                $requestData = $this->getTheRequestBody();
+                $productId = $requestData['id'] ?? 0;
+                if ($productId > 0)
+                    $this->success(200, $this->productLogic->deleteProduct($productId));
                 break;
             default:
                 $this->error(400, [], "Method not allowed");
