@@ -68,9 +68,15 @@ class RequestHandler
                 $requestData = $this->getTheRequestBody();
                 $this->success(200, $this->userLogin->loginUser($requestData));
                 break;
+            case 'update_profile':
+                $requestData = $this->getTheRequestBody();
+                $this->success(200, $this->userLogic->updateProfile($_SESSION['user_id'], $requestData));
+                break;
+
             case 'add_product':
                 $this->success(200, $this->productLogic->addProduct());
                 break;
+
             case 'edit_product':
                 $productId = $_GET['id'] ?? 0;
                 if ($productId > 0) {
@@ -79,6 +85,7 @@ class RequestHandler
                     $this->error(400, [], "Invalid product ID");
                 }
                 break;
+
             case 'add_cart':
                 $requestData = $this->getTheRequestBody();
                 if (!isset($_SESSION)) {
@@ -125,13 +132,15 @@ class RequestHandler
             case 'checkLoginStatus':
                 $this->success(200, $this->userLogic->checkLoginStatus());
                 break;
+            case 'load_profile':
+                $this->success(200, $this->userLogic->loadProfile($_SESSION['user_id']));
+                break;
             case 'get_product':
                 $productId = $_GET['id'] ?? 0;  // Use $_GET to fetch the product ID from the query string
                 if ($productId > 0) {
                     $productData = $this->productLogic->getProduct($productId);
                     if ($productData)
                         $this->success(200, $productData);
-
                 }
                 break;
             default:
