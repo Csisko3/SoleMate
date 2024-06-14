@@ -25,7 +25,7 @@
                         echo '<li class="nav-item dropdown">';
                         echo '<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Adminpanel</a>';
                         echo '<ul class="dropdown-menu">';
-                        echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="sites/adminpanel.php">Produkte bearbeiten</a></li>';
+                        echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="./admin_products.php">Produkte bearbeiten</a></li>';
                         echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="sites/adminpanel.php">Kunden bearbeiten</a></li>';
                         echo '</ul>';
                         echo '</li>';
