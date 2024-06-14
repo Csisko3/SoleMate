@@ -1,0 +1,58 @@
+/* Styling the search form */
+.navbar .form-control {
+  border-radius: 0.25rem;
+  margin-right: 0.5rem;
+  width: 250px; /* Adjust as needed */
+  background-color: #2a2a2a; /* Dark background */
+  color: #fff; /* Light text */
+}
+
+.navbar .form-control:focus {
+  outline: none; /* Remove outline */
+  box-shadow: none; /* Remove box shadow */
+  border-color: #666; /* Darker border on focus */
+}
+
+#suggestions {
+  max-height: 150px; /* Adjust height as needed */
+  overflow-y: auto;
+  width: 75%;
+  margin-top: 2.3rem; /* Adjust as needed for spacing */
+  z-index: 1000;
+  background-color: #333; /* Dark background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a slight shadow for depth */
+}
+
+#suggestions .list-group-item {
+  background-color: #333; /* Dark background */
+  border: 1px solid #444; /* Dark border */
+  color: #fff; /* Light text */
+  cursor: pointer;
+}
+
+#suggestions .list-group-item:hover {
+  background-color: #444; /* Slightly lighter on hover */
+}
+
+.filter-btn-container {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.filter-btn {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 25px;
+}
+
+.filter-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+.warenkorb-btn:hover{
+  background-color: white;
+  color: black;
+}
+
