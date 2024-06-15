@@ -19,8 +19,9 @@ include '../res/layout/navbar.php';
     </div>
 </div>
 
-
+<script src="../js/cart.js"></script>
 <script src="../js/produkte.js"></script>
+
 <script src="../js/login.js"></script> <!-- für autoLogin -->
 </body>
 

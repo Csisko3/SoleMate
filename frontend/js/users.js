@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  //---------------profile Management-----------------
+  //---------------Profile Management-----------------
   $(document).ready(function () {
     // Profil-Daten laden
     loadProfile();
