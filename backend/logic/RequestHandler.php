@@ -151,6 +151,19 @@ class RequestHandler
             case 'get_cart':
                 $this->success(200, $this->cartLogic->getCart($_SESSION['user_id']));
                 break;
+            case 'get_orders':  // Added case for fetching orders
+                $this->success(200, $this->cartLogic->getOrders($_SESSION['user_id']));
+                break;
+            case 'get_order_details':  // Added case for fetching order details
+                $orderId = $_GET['order_id'] ?? 0;
+                if ($orderId > 0)
+                    $this->success(200, $this->cartLogic->getOrderDetails($_SESSION['user_id'], $orderId));
+                break;
+            case 'print_invoice':
+                $orderId = $_GET['order_id'] ?? 0;
+                if ($orderId > 0)
+                    require 'print_invoice.php';
+                break;
             default:
                 $this->error(400, [], "Method not allowed");
                 break;

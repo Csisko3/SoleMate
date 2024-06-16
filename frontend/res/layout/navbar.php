@@ -23,7 +23,13 @@
                 if (isset($_SESSION['username'])) {
                     echo '<div class="nav-item"><span class="nav-link mx-lg-2 hallo">Hallo, ' . $_SESSION['username'] . '</span></div>';
                     echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="../res/layout/logout.php">Abmelden</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="./profile_manager.php">Mein Konto</a></li>';
+                    echo '<li class="nav-item dropdown">';
+                    echo '<a class="nav-link dropdown-toggle mx-lg-2 bla" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mein Konto</a>';
+                    echo '<ul class="dropdown-menu">';
+                    echo '<li class="nav-item"><a class="dropdown-item" href="./profile_manager.php">Konto verwalten</a></li>';
+                    echo '<li class="nav-item"><a class="dropdown-item" href="./order_manager.php">Bestellungen ansehen</a></li>';
+                    echo '</ul>';
+                    echo '</li>';
                     if ($_SESSION['is_admin'] == 1) {
                         echo '<li class="nav-item dropdown">';
                         echo '<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Adminpanel</a>';

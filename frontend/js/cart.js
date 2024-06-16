@@ -45,10 +45,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-        document.getElementById('proceedToCheckout').addEventListener('click', function() {
+    document.getElementById('proceedToCheckout').addEventListener('click', function() {
         var checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
         checkoutModal.show();
-    });
+    }); 
 
     // Function to update cart display
     function updateCartDisplay(productId, quantity) {

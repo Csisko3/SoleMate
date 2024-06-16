@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 15. Jun 2024 um 21:43
+-- Erstellungszeit: 16. Jun 2024 um 03:55
 -- Server-Version: 10.4.32-MariaDB
 -- PHP-Version: 8.2.12
 
@@ -31,16 +31,38 @@ CREATE TABLE `cart` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `order_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `order_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `order_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`order_details`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Daten für Tabelle `cart`
+-- Daten für Tabelle `orders`
 --
 
-INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`) VALUES
-(33, 29, 6, 1),
-(34, 29, 3, 1);
+INSERT INTO `orders` (`order_id`, `user_id`, `name`, `address`, `payment_method`, `order_date`, `order_details`) VALUES
+(27, 32, 'asd', 'asd2134', 'credit_card', '2024-06-16 02:53:18', '[{\"product_name\":\"Adidas Yeezy Boost 350 V2\",\"product_price\":\"299.00\",\"quantity\":2},{\"product_name\":\"Nike Dunk Low Black White\",\"product_price\":\"200.00\",\"quantity\":2}]'),
+(28, 32, 'ROli', 'Rolistraße', 'credit_card', '2024-06-16 02:54:30', '[{\"product_name\":\" Air Jordan 4 Retro \",\"product_price\":\"209.99\",\"quantity\":1}]'),
+(29, 32, 'ROli', 'Rolistraße', 'credit_card', '2024-06-16 02:56:06', '[{\"product_name\":\"Adidas Yeezy Boost 350 V2\",\"product_price\":\"299.00\",\"quantity\":1}]'),
+(30, 32, 'asd', 'asd', 'paypal', '2024-06-16 02:56:58', '[{\"product_name\":\"Nike Dunk Low Black White\",\"product_price\":\"200.00\",\"quantity\":1}]'),
+(31, 32, '123', '1233123', 'credit_card', '2024-06-16 02:57:34', '[{\"product_name\":\"Nike Air Force 1 \'07 Triple White\",\"product_price\":\"149.00\",\"quantity\":1},{\"product_name\":\"Adidas Yeezy Boost 350 V2\",\"product_price\":\"299.00\",\"quantity\":1}]'),
+(32, 32, 'fhT', 'Hochstädterplatz 6', 'paypal', '2024-06-16 03:00:00', '[{\"product_name\":\"Nike Air Force 1 \'07 Triple White\",\"product_price\":\"149.00\",\"quantity\":2},{\"product_name\":\"Nike Dunk Low Black White\",\"product_price\":\"200.00\",\"quantity\":2}]'),
+(33, 32, 'Mr T.', 'ATeam', 'credit_card', '2024-06-16 03:22:58', '[{\"product_name\":\"Adidas Yeezy Boost 350 V2\",\"product_price\":\"299.00\",\"quantity\":3}]');
 
 -- --------------------------------------------------------
 
@@ -113,6 +135,13 @@ ALTER TABLE `cart`
   ADD KEY `product_id` (`product_id`);
 
 --
+-- Indizes für die Tabelle `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indizes für die Tabelle `products`
 --
 ALTER TABLE `products`
@@ -132,7 +161,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT für Tabelle `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+
+--
+-- AUTO_INCREMENT für Tabelle `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT für Tabelle `products`
@@ -156,9 +191,14 @@ ALTER TABLE `user`
 ALTER TABLE `cart`
   ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`ID`),
   ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`ID`);
+
+--
+-- Constraints der Tabelle `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
