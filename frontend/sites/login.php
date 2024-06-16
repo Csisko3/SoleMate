@@ -11,9 +11,10 @@ include '../res/layout/navbar.php';
             <img class="mt-4 mb-2" src="../res/img/logo.png" height="70" alt="Hotel Logo">
             <h1 class="h3 mb-3 font-weight-normal">Anmelden</h1>
 
-            <label for="login" class="visually-hidden">Login</label>
-            <input type="text" id="username" name="username" class="form-control login-em" placeholder="Email Adresse oder Username"
+            <label for="identifier" class="visually-hidden">Login</label>
+            <input type="text" id="identifier" name="identifier" class="form-control login-em" placeholder="Email Adresse oder Username"
                 required autofocus>
+
 
             <label for="password" class="visually-hidden">Passwort</label>
             <input type="password" id="password" name="password" class="form-control login-pw" placeholder="Passwort"
