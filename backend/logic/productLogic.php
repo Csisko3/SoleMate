@@ -69,6 +69,7 @@ class ProductLogic
         return ['success' => true, 'data' => $products];
 
     }
+    
 
     //----------------------------Adminpanel--------------------------------
 

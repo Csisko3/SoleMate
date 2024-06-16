@@ -56,3 +56,57 @@
   color: black;
 }
 
+/* Styling the cart dropdown */
+
+/* Increase the width of the cart dropdown */
+.dropdown-menu#cartItems {
+  width: 400px; /* Adjust the width as needed */
+}
+
+/* Ensure the text inside the dropdown is properly aligned */
+.dropdown-menu#cartItems .dropdown-item {
+  white-space: normal; /* Allow text to wrap */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Adjust the quantity buttons inside the dropdown */
+.dropdown-menu#cartItems .quantity-buttons {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.dropdown-menu#cartItems .quantity-buttons .btn {
+  margin: 0 5px;
+}
+
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-card img {
+  max-height: 300px; /* Adjust as needed */
+  object-fit: cover;
+}
+
+.product-card .card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card .card-title,
+.product-card .card-text {
+  margin: 0;
+}
+
+.product-card .card-body .add-to-cart {
+  margin-top: auto; /* Push the button to the bottom */
+}
+

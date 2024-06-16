@@ -68,9 +68,14 @@ class RequestHandler
                 $requestData = $this->getTheRequestBody();
                 $this->success(200, $this->userLogin->loginUser($requestData));
                 break;
+            case 'update_profile':
+                $requestData = $this->getTheRequestBody();
+                $this->success(200, $this->userLogic->updateProfile($_SESSION['user_id'], $requestData));
+                break;
             case 'add_product':
                 $this->success(200, $this->productLogic->addProduct());
                 break;
+
             case 'edit_product':
                 $productId = $_GET['id'] ?? 0;
                 if ($productId > 0) {
@@ -79,24 +84,14 @@ class RequestHandler
                     $this->error(400, [], "Invalid product ID");
                 }
                 break;
+
             case 'add_cart':
                 $requestData = $this->getTheRequestBody();
-                if (!isset($_SESSION)) {
-                    session_start();
-                }
                 if (!isset($_SESSION['user_id'])) {
                     $this->error(401, [], "User not logged in");
                 }
                 $this->success(200, $this->cartLogic->addToCart($_SESSION['user_id'], $requestData['product_id']));
                 break;
-            case 'change_customer_status':
-                $requestData = $this->getTheRequestBody();
-                $customerId = $requestData['id'] ?? 0;
-                $action = $requestData['action'] ?? '';
-                if ($customerId > 0 && in_array($action, ['activate', 'deactivate']))
-                    $this->success(200, $this->userLogic->changeCustomerStatus($customerId, $action));
-                break;
-
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
@@ -127,11 +122,14 @@ class RequestHandler
                 $this->success(200, $this->productLogic->load_products());
                 break;
             case 'search_products':
-                $query = $params['query'] ?? '';
+                $query = $_GET['query'] ?? '';
                 $this->success(200, $this->productLogic->searchProducts($query));
                 break;
             case 'checkLoginStatus':
                 $this->success(200, $this->userLogic->checkLoginStatus());
+                break;
+            case 'load_profile':
+                $this->success(200, $this->userLogic->loadProfile($_SESSION['user_id']));
                 break;
             case 'get_product':
                 $productId = $_GET['id'] ?? 0;  // Use $_GET to fetch the product ID from the query string
@@ -139,8 +137,23 @@ class RequestHandler
                     $productData = $this->productLogic->getProduct($productId);
                     if ($productData)
                         $this->success(200, $productData);
-
                 }
+                break;
+            case 'get_cart':
+                $this->success(200, $this->cartLogic->getCart($_SESSION['user_id']));
+                break;
+            case 'get_orders':  // Added case for fetching orders
+                $this->success(200, $this->cartLogic->getOrders($_SESSION['user_id']));
+                break;
+            case 'get_order_details':  // Added case for fetching order details
+                $orderId = $_GET['order_id'] ?? 0;
+                if ($orderId > 0)
+                    $this->success(200, $this->cartLogic->getOrderDetails($_SESSION['user_id'], $orderId));
+                break;
+            case 'print_invoice':
+                $orderId = $_GET['order_id'] ?? 0;
+                if ($orderId > 0)
+                    require 'print_invoice.php';
                 break;
             case 'loadCustomers':
                 $this->success(200, $this->userLogic->loadCustomers());

@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Test", json);
         $.ajax({
             type: "POST",
-            url: "/SoleMate/backend/logic/RequestHandler.php?resource=login",
+            url: "../../backend/logic/RequestHandler.php?resource=login",
             cache: false,
             data: JSON.stringify(json), // konvertiert js-Objekt in String-Format
             dataType: "json",
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function autoLogin() {
         $.ajax({
             type: "GET",
-            url: "/SoleMate/backend/logic/RequestHandler.php?resource=autoLogin",
+            url: "../../backend/logic/RequestHandler.php?resource=autoLogin",
             cache: false,
             dataType: "json",
             contentType: "application/json",

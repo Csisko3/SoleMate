@@ -18,26 +18,27 @@ class userLogin
 
     public function loginUser($data)
     {
-        // if (!isset($data['username'])) {
-        //     die('Kein Benutzername angegeben');
-        // }
-
-        $username = $data['username'] ?? '';
+        $identifier = $data['identifier'] ?? ''; // Either username or email
         $password = $data['password'] ?? '';
         $remember = $data['remember'] ?? false;
 
-        $sql = "SELECT * FROM user WHERE username = ?";
+        // Check if the identifier is an email or username
+        $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? true : false;
+
+        if ($isEmail) {
+            $sql = "SELECT * FROM user WHERE email = ?";
+        } else {
+            $sql = "SELECT * FROM user WHERE username = ?";
+        }
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $username);
+        $stmt->bind_param("s", $identifier);
         $stmt->execute();
         $result = $stmt->get_result();
-
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
 
-
-            
             if (password_verify($password, $row['password'])) {
                 // Setzen der Sessions
                 $_SESSION['user_id'] = $row['ID'];
@@ -74,7 +75,7 @@ class userLogin
         } else {
             return [
                 'success' => false,
-                'message' => 'Benutzername nicht gefunden!'
+                'message' => 'Benutzername oder E-Mail nicht gefunden!'
             ];
         }
     }
@@ -88,5 +89,4 @@ class userLogin
         $isLoggedIn = isset($_SESSION['user_id']);
         return ['success' => true, 'isLoggedIn' => $isLoggedIn];
     }
-
 }
