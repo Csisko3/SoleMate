@@ -186,9 +186,6 @@ class CartLogic
         }
     }
 
-
-
-
     public function getOrders($userId)
     {
         global $host, $db_user, $db_password, $database;
@@ -263,7 +260,75 @@ class CartLogic
 
         return ['success' => true, 'order' => $order];
     }
+//---------------------Admin Funktions---------------------
+public function getOrdersCustomer($customerId)
+{
+    global $host, $db_user, $db_password, $database;
+    $conn = new mysqli($host, $db_user, $db_password, $database);
 
+    if ($conn->connect_error) {
+        return ['success' => false, 'message' => 'Database connection failed'];
+    }
+
+    $sql = "SELECT * FROM orders WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $customerId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $orders = [];
+    while ($row = $result->fetch_assoc()) {
+        $row['order_details'] = json_decode($row['order_details'], true);
+        $orders[] = $row;
+    }
+
+    $stmt->close();
+    $conn->close();
+
+    return ['success' => true, 'orders' => $orders];
+}
+
+public function removeOrderItem($userId, $orderId, $productId)
+{
+    global $host, $db_user, $db_password, $database;
+    $conn = new mysqli($host, $db_user, $db_password, $database);
+
+    if ($conn->connect_error) {
+        return ['success' => false, 'message' => 'Database connection failed'];
+    }
+
+    // Retrieve the order details
+    $sql = "SELECT order_details FROM orders WHERE order_id = ? AND user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $orderId, $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $order = $result->fetch_assoc();
+    $stmt->close();
+
+    if (!$order) {
+        $conn->close();
+        return ['success' => false, 'message' => 'Order not found'];
+    }
+
+    $orderDetails = json_decode($order['order_details'], true);
+
+    // Remove the product from the order details
+    $orderDetails = array_filter($orderDetails, function($item) use ($productId) {
+        return $item['product_id'] != $productId;
+    });
+
+    // Update the order details in the database
+    $updatedOrderDetails = json_encode(array_values($orderDetails));
+    $sql = "UPDATE orders SET order_details = ? WHERE order_id = ? AND user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sii", $updatedOrderDetails, $orderId, $userId);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+    return ['success' => true, 'message' => 'Order item removed successfully'];
+}
 
 
 }

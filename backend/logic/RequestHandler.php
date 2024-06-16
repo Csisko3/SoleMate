@@ -97,8 +97,15 @@ class RequestHandler
                 $customerId = $requestData['id'] ?? 0;
                 $action = $requestData['action'] ?? '';
                 if ($customerId > 0 && in_array($action, ['activate', 'deactivate']))
-                    $this->success(200, $this->userLogic->changeCustomerStatus($customerId, $action));  
+                    $this->success(200, $this->userLogic->changeCustomerStatus($customerId, $action));
                 break;
+                case 'remove_order_item':
+                    $requestData = $this->getTheRequestBody();
+                    $userId = $_SESSION['user_id'];
+                    $orderId = $requestData['order_id'];
+                    $productId = $requestData['product_id'];
+                    $this->success(200, $this->cartLogic->removeOrderItem($userId, $orderId, $productId));
+                    break;
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
@@ -152,6 +159,11 @@ class RequestHandler
             case 'get_orders':  // Added case for fetching orders
                 $this->success(200, $this->cartLogic->getOrders($_SESSION['user_id']));
                 break;
+            case 'get_orders_customer':  // Added case for fetching orders
+                $customerId = $_GET['customer_id'] ?? 0;
+                if ($customerId > 0)
+                    $this->success(200, $this->cartLogic->getOrdersCustomer($customerId));
+                break;
             case 'get_order_details':  // Added case for fetching order details
                 $orderId = $_GET['order_id'] ?? 0;
                 if ($orderId > 0)
@@ -165,7 +177,6 @@ class RequestHandler
             case 'loadCustomers':
                 $this->success(200, $this->userLogic->loadCustomers());
                 break;
-
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
