@@ -85,7 +85,7 @@ include '../res/layout/navbar.php';
         </div>
     </div>
 
-<script src="../js/users.js"></script>
+<script src="../js/productManagment.js"></script>
 </body>
 
 
