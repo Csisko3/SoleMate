@@ -1,5 +1,4 @@
 <?php
-//header 
 include '../res/layout/header.php';
 include '../res/layout/navbar.php';
 ?>
@@ -19,12 +18,11 @@ include '../res/layout/navbar.php';
     </div>
 </div>
 
-
+<script src="../js/cart.js"></script>
 <script src="../js/produkte.js"></script>
+
 <script src="../js/login.js"></script> <!-- für autoLogin -->
 </body>
 
-<?php
-//footer
-include '../res/layout/footer.php';
-?>
+<?php include '../res/layout/footer.php';
+ ?>

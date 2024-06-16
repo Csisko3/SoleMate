@@ -87,13 +87,19 @@ class RequestHandler
 
             case 'add_cart':
                 $requestData = $this->getTheRequestBody();
-                if (!isset($_SESSION)) {
-                    session_start();
-                }
                 if (!isset($_SESSION['user_id'])) {
                     $this->error(401, [], "User not logged in");
                 }
                 $this->success(200, $this->cartLogic->addToCart($_SESSION['user_id'], $requestData['product_id']));
+                break;
+            case 'update_cart_item':
+                $requestData = $this->getTheRequestBody();
+                $this->success(200, $this->cartLogic->updateCartItem($_SESSION['user_id'], $requestData));
+                break;
+            case 'place_order':
+                $requestData = $this->getTheRequestBody();
+                $userId = $_SESSION['user_id'];
+                $this->success(200, $this->cartLogic->placeOrder($userId, $requestData));
                 break;
             default:
                 $this->error(400, [], "Method not allowed");
@@ -125,9 +131,9 @@ class RequestHandler
                 $this->success(200, $this->productLogic->load_products());
                 break;
             case 'search_products':
-                    $query = $_GET['query'] ?? '';
-                    $this->success(200, $this->productLogic->searchProducts($query));
-                    break;
+                $query = $_GET['query'] ?? '';
+                $this->success(200, $this->productLogic->searchProducts($query));
+                break;
             case 'checkLoginStatus':
                 $this->success(200, $this->userLogic->checkLoginStatus());
                 break;
@@ -141,6 +147,22 @@ class RequestHandler
                     if ($productData)
                         $this->success(200, $productData);
                 }
+                break;
+            case 'get_cart':
+                $this->success(200, $this->cartLogic->getCart($_SESSION['user_id']));
+                break;
+            case 'get_orders':  // Added case for fetching orders
+                $this->success(200, $this->cartLogic->getOrders($_SESSION['user_id']));
+                break;
+            case 'get_order_details':  // Added case for fetching order details
+                $orderId = $_GET['order_id'] ?? 0;
+                if ($orderId > 0)
+                    $this->success(200, $this->cartLogic->getOrderDetails($_SESSION['user_id'], $orderId));
+                break;
+            case 'print_invoice':
+                $orderId = $_GET['order_id'] ?? 0;
+                if ($orderId > 0)
+                    require 'print_invoice.php';
                 break;
             default:
                 $this->error(400, [], "Method not allowed");
