@@ -92,15 +92,6 @@ class RequestHandler
                 }
                 $this->success(200, $this->cartLogic->addToCart($_SESSION['user_id'], $requestData['product_id']));
                 break;
-            case 'update_cart_item':
-                $requestData = $this->getTheRequestBody();
-                $this->success(200, $this->cartLogic->updateCartItem($_SESSION['user_id'], $requestData));
-                break;
-            case 'place_order':
-                $requestData = $this->getTheRequestBody();
-                $userId = $_SESSION['user_id'];
-                $this->success(200, $this->cartLogic->placeOrder($userId, $requestData));
-                break;
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
@@ -164,6 +155,10 @@ class RequestHandler
                 if ($orderId > 0)
                     require 'print_invoice.php';
                 break;
+            case 'loadCustomers':
+                $this->success(200, $this->userLogic->loadCustomers());
+                break;
+
             default:
                 $this->error(400, [], "Method not allowed");
                 break;

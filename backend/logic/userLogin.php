@@ -17,64 +17,68 @@ class userLogin
     }
 
     public function loginUser($data)
-{
-    $identifier = $data['identifier'] ?? ''; // Either username or email
-    $password = $data['password'] ?? '';
-    $remember = $data['remember'] ?? false;
+    {
+        $identifier = $data['identifier'] ?? ''; // Either username or email
+        $password = $data['password'] ?? '';
+        $remember = $data['remember'] ?? false;
 
-    // Check if the identifier is an email or username
-    $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? true : false;
+        // Check if the identifier is an email or username
+        $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? true : false;
 
-    if ($isEmail) {
-        $sql = "SELECT * FROM user WHERE email = ?";
-    } else {
-        $sql = "SELECT * FROM user WHERE username = ?";
-    }
+        if ($isEmail) {
+            $sql = "SELECT * FROM user WHERE email = ?";
+        } else {
+            $sql = "SELECT * FROM user WHERE username = ?";
+        }
 
-    $stmt = $this->conn->prepare($sql);
-    $stmt->bind_param("s", $identifier);
-    $stmt->execute();
-    $result = $stmt->get_result();
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $identifier);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        
-        if (password_verify($password, $row['password'])) {
-            // Setzen der Sessions
-            $_SESSION['user_id'] = $row['ID'];
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['is_admin'] = $row['is_admin'];
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
 
-            // Setzen des Cookies, wenn "Login merken" aktiviert ist
-            if ($remember) {
-                setcookie('user_id', $row['ID'], time() + 31536000, "/"); // 1 year - "/" means the cookie is available in the whole domains
+            if (password_verify($password, $row['password'])) {
+                // Setzen der Sessions
+                $_SESSION['user_id'] = $row['ID'];
+                $_SESSION['username'] = $row['username'];
+                $_SESSION['is_admin'] = $row['is_admin'];
+
+                if ($row['is_active'] == 0) {
+                    return [
+                        'success' => false,
+                        'message' => 'Ihr Account wurde deaktiviert!'
+                    ];
+                }
+
+                // Setzen des Cookies, wenn "Login merken" aktiviert ist
+                if ($remember) {
+                    setcookie('user_id', $row['ID'], time() + 31536000, "/"); // 1 year - "/" means the cookie is available in the whole domains
+                }
+
+                return [
+                    'success' => true,
+                    'message' => 'Login erfolgreich',
+                    'user' => [
+                        'id' => $row['ID'],
+                        'username' => $row['username'],
+                        'is_admin' => $row['is_admin']
+                    ]
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Falsches Passwort!'
+                ];
             }
-
-            return [
-                'success' => true,
-                'message' => 'Login erfolgreich',
-                'user' => [
-                    'id' => $row['ID'],
-                    'username' => $row['username'],
-                    'is_admin' => $row['is_admin']
-                ]
-            ];
         } else {
             return [
                 'success' => false,
-                'message' => 'Falsches Passwort!'
+                'message' => 'Benutzername oder E-Mail nicht gefunden!'
             ];
         }
-    } else {
-        return [
-            'success' => false,
-            'message' => 'Benutzername oder E-Mail nicht gefunden!'
-        ];
     }
-}
-
-
-
 
     private function checkLoginStatus()
     {
@@ -85,5 +89,4 @@ class userLogin
         $isLoggedIn = isset($_SESSION['user_id']);
         return ['success' => true, 'isLoggedIn' => $isLoggedIn];
     }
-
 }
