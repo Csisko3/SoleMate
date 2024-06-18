@@ -36,6 +36,8 @@
                         echo '<ul class="dropdown-menu">';
                         echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="./admin_products.php">Produkte bearbeiten</a></li>';
                         echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="./admin_user.php">Kunden bearbeiten</a></li>';
+                        echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="../sites/add_coupon.php">Gutschein erstellen</a></li>';
+                        echo '<li class="nav-item"><a class="nav-link mx-lg-2 bla" href="../sites/manage_coupons.php">Gutscheine verwalten</a></li>';
                         echo '</ul>';
                         echo '</li>';
                     }

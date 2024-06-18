@@ -4,7 +4,7 @@ require_once "userLogic.php";
 require_once "userLogin.php";
 require_once "productLogic.php";
 require_once "cartLogic.php";
-require_once "adminProduct.php";
+require_once "couponLogic.php";
 
 
 $requestHandler = new RequestHandler();
@@ -16,7 +16,7 @@ class RequestHandler
     private $userLogin;
     private $productLogic;
     private $cartLogic;
-    private $adminProduct;
+    private $couponLogic;
 
     public function __construct()
     {
@@ -24,6 +24,7 @@ class RequestHandler
         $this->userLogin = new UserLogin();
         $this->productLogic = new ProductLogic();
         $this->cartLogic = new CartLogic();
+        $this->couponLogic = new CouponLogic();
         //$this->adminProduct = new AdminProduct();
     }
 
@@ -75,16 +76,10 @@ class RequestHandler
             case 'add_product':
                 $this->success(200, $this->productLogic->addProduct());
                 break;
-
             case 'edit_product':
                 $productId = $_GET['id'] ?? 0;
-                if ($productId > 0) {
+                if ($productId > 0)
                     $this->success(200, $this->productLogic->editProduct($productId));
-                } else {
-                    $this->error(400, [], "Invalid product ID");
-                }
-                break;
-
             case 'add_cart':
                 $requestData = $this->getTheRequestBody();
                 if (!isset($_SESSION['user_id'])) {
@@ -99,13 +94,28 @@ class RequestHandler
                 if ($customerId > 0 && in_array($action, ['activate', 'deactivate']))
                     $this->success(200, $this->userLogic->changeCustomerStatus($customerId, $action));
                 break;
-                case 'remove_order_item':
-                    $requestData = $this->getTheRequestBody();
-                    $userId = $_SESSION['user_id'];
-                    $orderId = $requestData['order_id'];
-                    $productId = $requestData['product_id'];
-                    $this->success(200, $this->cartLogic->removeOrderItem($userId, $orderId, $productId));
-                    break;
+            case 'remove_order_item':
+                $requestData = $this->getTheRequestBody();
+                $userId = $_SESSION['user_id'];
+                $orderId = $requestData['order_id'];
+                $productId = $requestData['product_id'];
+                $this->success(200, $this->cartLogic->removeOrderItem($userId, $orderId, $productId));
+                break;
+            case 'update_cart_item':
+                $requestData = $this->getTheRequestBody();
+                $this->success(200, $this->cartLogic->updateCartItem($_SESSION['user_id'], $requestData));
+                break;
+            case 'place_order':
+                $requestData = $this->getTheRequestBody();
+                $userId = $_SESSION['user_id'];
+                $this->success(200, $this->cartLogic->placeOrder($userId, $requestData));
+                break;
+            case 'coupon':
+                $requestData = $this->getTheRequestBody();
+                $coupon = $this->couponLogic->saveCoupon($requestData);
+                if ($coupon)
+                    $this->success(201, $coupon);
+                break;
             default:
                 $this->error(400, [], "Method not allowed");
                 break;
@@ -176,6 +186,9 @@ class RequestHandler
                 break;
             case 'loadCustomers':
                 $this->success(200, $this->userLogic->loadCustomers());
+                break;
+            case 'load_coupons':
+                $this->success(200, $this->couponLogic->getAllCoupons());
                 break;
             default:
                 $this->error(400, [], "Method not allowed");

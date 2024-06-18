@@ -45,10 +45,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-    document.getElementById('proceedToCheckout').addEventListener('click', function() {
-        var checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
-        checkoutModal.show();
-    }); 
+    const proceedToCheckoutButton = document.getElementById('proceedToCheckout');
+    if (proceedToCheckoutButton) {
+        proceedToCheckoutButton.addEventListener('click', function() {
+            var checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+            checkoutModal.show();
+        });
+    }
 
     // Function to update cart display
     function updateCartDisplay(productId, quantity) {
@@ -254,10 +257,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize cart on page load
     updateCart();
-    document.getElementById("checkoutForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        submitOrder();
-    });
+    const checkoutForm = document.getElementById("checkoutForm");
+    if (checkoutForm) {
+        checkoutForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            submitOrder();
+        });
+    }
 
     function submitOrder() {
         const formData = new FormData(document.getElementById("checkoutForm"));
