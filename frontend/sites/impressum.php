@@ -38,12 +38,12 @@ include '../res/layout/navbar.php';
         </body>
     </div>
     <div class="container i-img mb-5">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Poker-sm-212-Ks.png/213px-Poker-sm-212-Ks.png" class="imp-img img-fluid" alt="Taqi">
-        <img src="../res/img/roli.png" class="imp-img img-fluid " alt="Roli">
-        <img src="Basel Bild" clas="">
-        <p>Betreiber
-        <br> Taqi HASSAN & Roland (the GOAT) CSISZER & Basel DIAB</p>
-    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Poker-sm-212-Ks.png/213px-Poker-sm-212-Ks.png" class="imp-img img-fluid" alt="Taqi">
+    <img src="../res/img/roli.png" class="imp-img img-fluid" alt="Roli">
+    <img src="../res/img/image.png" class="imp-img img-fluid" alt="Image">
+    <p>Betreiber
+    <br> Taqi HASSAN & Roland (the GOAT) CSISZER & Basel DIAB</p>
+</div>
 
 
 </body>

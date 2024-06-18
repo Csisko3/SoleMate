@@ -8,16 +8,16 @@
 }
 
 .navbar .form-control:focus {
-  outline: none; /* Remove outline */
-  box-shadow: none; /* Remove box shadow */
-  border-color: #666; /* Darker border on focus */
+  outline: none; 
+  box-shadow: none; 
+  border-color: #666; 
 }
 
 #suggestions {
-  max-height: 150px; /* Adjust height as needed */
+  max-height: 150px; 
   overflow-y: auto;
   width: 75%;
-  margin-top: 2.3rem; /* Adjust as needed for spacing */
+  margin-top: 2.3rem; 
   z-index: 1000;
   background-color: #333; /* Dark background */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a slight shadow for depth */
@@ -110,3 +110,8 @@
   margin-top: auto; /* Push the button to the bottom */
 }
 
+.imp-img {
+  width: 200px; 
+  height: 200px; 
+  object-fit: cover; 
+}
