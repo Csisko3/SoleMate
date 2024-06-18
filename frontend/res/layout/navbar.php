@@ -48,7 +48,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#" role="button" id="cartDropdown" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <i class="fa-solid fa-cart-shopping"></i> Warenkorb (<span id="cartCount">0</span>)
+                        <i class="fa-solid fa-shopping-cart"></i> Warenkorb (<span id="cartCount">0</span>)
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end cart-dropdown" aria-labelledby="cartDropdown"
                         id="cartItems">
