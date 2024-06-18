@@ -19,7 +19,7 @@ $(document).ready(function() {
                         <td>${coupon.code}</td>
                         <td>${coupon.amount}</td>
                         <td>${coupon.residual_value}</td>
-                        <td>${coupon.expiration_date}</td>
+                        <td>${coupon.date}</td>
                         <td>${formattedExpired}</td>
                     `;
                     content += "</tr>";
